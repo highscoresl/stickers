@@ -1,0 +1,36 @@
+version: '3'
+
+services:
+  php:
+    build:
+      context: ./docker/php
+    ports:
+      - "8000:80"
+      - "443:443"
+      - "5173:5173"
+    volumes:
+      - .:/code
+      - ./docker/caddy/Caddyfile:/etc/caddy/Caddyfile
+    extra_hosts:
+      - "host.docker.internal:host-gateway"
+    networks:
+      - default-network
+    depends_on:
+      - mysql
+  mysql:
+    image: mysql:8.0
+    environment:
+      MYSQL_ROOT_PASSWORD: root
+      MYSQL_DATABASE: app
+      MYSQL_PASSWORD: app
+    ports:
+      - "3306:3306"
+    volumes:
+      - dbdata:/var/lib/mysql
+    networks:
+      - default-network
+volumes:
+  dbdata:
+    driver: local
+networks:
+    default-network:
