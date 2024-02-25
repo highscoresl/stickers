@@ -11,6 +11,15 @@ class GenerateAvatarController
 {
     public function __invoke(Request $request)
     {
+        $prompts = [
+            'sticker of a man with beard and futuristic cyberpunk glasses, outlined by a thick white line. Cyberpunk style, vivid colors, futuristic. Cartoon style',
+            'Create a cartoon-style sticker featuring a bearded man wearing futuristic cyberpunk glasses, outlined by a bold white line. Incorporate vivid colors and a cyberpunk aesthetic.',
+            'Design a cyberpunk-themed sticker portraying a man with a beard and futuristic glasses, outlined with a thick white line. Emphasize vibrant colors and a cartoonish style for an eye-catching look.',
+            'Produce a vibrant sticker design in a cartoon style, showcasing a bearded man adorned with futuristic cyberpunk glasses. Ensure the character is outlined by a prominent white line, embracing the cyberpunk theme.',
+            'Craft a cartoon sticker that captures the essence of cyberpunk with a bearded man wearing futuristic glasses. Outline the character with a bold white line and infuse the design with vivid, cyberpunk-inspired colors.',
+            'Illustrate a cyberpunk-inspired sticker featuring a character with a beard and futuristic glasses, outlined by a thick white line. Opt for a cartoon style and incorporate vivid colors to enhance the futuristic vibe.'
+        ];
+
         $response = Http::acceptJson()
             ->withToken(config('services.replicate.token'), 'Token')
             ->post('https://api.replicate.com/v1/predictions', [
@@ -19,7 +28,7 @@ class GenerateAvatarController
                     'image' => $request->get('img'),
                     'width' => 640,
                     'height' => 640,
-                    'prompt' => 'sticker of a man with beard and futuristic cyberpunk glasses, outlined by a thick white line. Cyberpunk style, vivid colors, futuristic. Cartoon style',
+                    'prompt' => $prompts[array_rand($prompts)],
                     'negative_prompt' => '(lowres, low quality, worst quality:1.2), (text:1.2), watermark, deformed, mutated, cross-eyed, ugly, disfigured (lowres, low quality, worst quality:1.2), (text:1.2), watermark',
                     'scheduler' => 'EulerDiscreteScheduler',
                     'enable_lcm' => false,
